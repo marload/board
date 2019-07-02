@@ -61,14 +61,13 @@ const app = http.createServer((req, res) => {
             if (err) {
                 return;
             }
-            let articleList= '';
-            articleList += '<ol>'
+            let articleListHTML = '<ol>';
             for (let i=0; i<items.length; i++) {
-                articleList = `<li> <a href="/article-${items}"> ${items} </a> </li>`
+                articleListHTML += `<li> <a href="article-${items[i]}"> ${items[i]} </a> </li>`
             }
-            articleList += '</ol>'
+            articleListHTML += '</ol>'
             res.writeHead(200, {"Content-Type": "text/html"});
-            res.end(templateHTML(templateIndexHTML(articleList)));
+            res.end(templateHTML(templateIndexHTML(articleListHTML)));
         });
 
         
@@ -89,6 +88,18 @@ const app = http.createServer((req, res) => {
                 res.end();
             })
         });
+    } else if (pathname.includes("/article-")) {
+        const title = pathname.split("-")[1];
+        fs.readFile(`./data/${title}`, 'utf8', (err, article) => {
+            if (err) {
+                return;
+            }
+            const body = `<h2> ${title} </h2> <p> ${article} <p>`
+            console.log(templateHTML(body));
+            res.writeHead(200, {"Content-Type": "text/html"});
+            res.end(templateHTML(body));
+        });
+
     } else {
         const template404Page = `<h1 align='center'>404 Not Found</h1>`
         res.writeHead(404, {"Content-Type": "text/html"});
