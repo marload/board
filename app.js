@@ -23,7 +23,7 @@ const app = http.createServer((req, res) => {
                 </style>
             </head>
             <body>
-                <h1 align="center">Board</h1>
+                <h1 align="center"><a href="/">Board</a></h1>
                 <a href="create">create</a>
                 <div id="board_list" align="center">
                     ${content}
@@ -83,9 +83,9 @@ const app = http.createServer((req, res) => {
             const post = qs.parse(body);
             const title = post.title;
             const article = post.article;
-            console.log(article);
+            
             fs.writeFile(`data/${title}`, article, 'utf8', (err) => {
-                res.writeHead(302, {Location: `/`});
+                res.writeHead(302, {Location: `/article-${title}`});
                 res.end();
             })
         });
