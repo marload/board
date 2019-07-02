@@ -61,20 +61,22 @@ const app = http.createServer((req, res) => {
             if (err) {
                 return;
             }
+
             let articleListHTML = '<ol>';
             for (let i=0; i<items.length; i++) {
                 articleListHTML += `<li> <a href="article-${items[i]}"> ${items[i]} </a> </li>`
             }
             articleListHTML += '</ol>'
+
             res.writeHead(200, {"Content-Type": "text/html"});
             res.end(templateHTML(templateIndexHTML(articleListHTML)));
-        });
-
-        
-    } else if (pathname === '/create') {
+        });        
+    }
+    else if (pathname === '/create') {
         res.writeHead(200, {"Content-Type": "text/html"});
         res.end(templateHTML(templateCreateHTML()));
-    } else if (pathname === '/create_article') {
+    }
+    else if (pathname === '/create_article') {
         let body = '';
         req.on('data', (data) => {
             body = body + data;
@@ -83,29 +85,31 @@ const app = http.createServer((req, res) => {
             const post = qs.parse(body);
             const title = post.title;
             const article = post.article;
-            
+
             fs.writeFile(`data/${title}`, article, 'utf8', (err) => {
                 res.writeHead(302, {Location: `/article-${title}`});
                 res.end();
-            })
+            });
         });
-    } else if (pathname.includes("/article-")) {
+    }
+    else if (pathname.includes("/article-")) {
         const title = pathname.split("-")[1];
+
         fs.readFile(`./data/${title}`, 'utf8', (err, article) => {
             if (err) {
-                return;
+                return;0.
             }
+
             const body = `<h2> ${title} </h2> <p> ${article} <p>`
             res.writeHead(200, {"Content-Type": "text/html"});
             res.end(templateHTML(body));
         });
 
-    } else {
+    }
+    else {
         const template404Page = `<h1 align='center'>404 Not Found</h1>`
+
         res.writeHead(404, {"Content-Type": "text/html"});
         res.end(template404Page);
     }
-    
-
-    30
 }).listen(3000);
