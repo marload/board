@@ -47,7 +47,7 @@ const app = http.createServer((req, res) => {
             <p>
                 <input type="text" name="title" placeholder="title"></p>
             <p>
-                <textarea name="description" placeholder="article"></textarea>
+                <textarea name="article" placeholder="article"></textarea>
             </p>
             <p>
                 <input type="submit">
@@ -83,6 +83,7 @@ const app = http.createServer((req, res) => {
             const post = qs.parse(body);
             const title = post.title;
             const article = post.article;
+            console.log(article);
             fs.writeFile(`data/${title}`, article, 'utf8', (err) => {
                 res.writeHead(302, {Location: `/`});
                 res.end();
@@ -95,7 +96,6 @@ const app = http.createServer((req, res) => {
                 return;
             }
             const body = `<h2> ${title} </h2> <p> ${article} <p>`
-            console.log(templateHTML(body));
             res.writeHead(200, {"Content-Type": "text/html"});
             res.end(templateHTML(body));
         });
