@@ -30,13 +30,13 @@ const app = http.createServer((req, res) => {
                 </div>
             </body>
             </html>
-        `
+        `;
     }
 
-    const templateIndexHTML = () => {
+    const templateIndexHTML = (articleList) => {
         return `
             <p>
-                article list
+                ${articleList}
             </p>
         `
     }
@@ -57,8 +57,21 @@ const app = http.createServer((req, res) => {
     }
 
     if (pathname === '/') {
-        res.writeHead(200, {"Content-Type": "text/html"});
-        res.end(templateHTML(templateIndexHTML()));
+        fs.readdir("./data", (err, items) => {
+            if (err) {
+                return;
+            }
+            let articleList= '';
+            articleList += '<ol>'
+            for (let i=0; i<items.length; i++) {
+                articleList = `<li> <a href="/article-${items}"> ${items} </a> </li>`
+            }
+            articleList += '</ol>'
+            res.writeHead(200, {"Content-Type": "text/html"});
+            res.end(templateHTML(templateIndexHTML(articleList)));
+        });
+
+        
     } else if (pathname === '/create') {
         res.writeHead(200, {"Content-Type": "text/html"});
         res.end(templateHTML(templateCreateHTML()));
@@ -83,4 +96,5 @@ const app = http.createServer((req, res) => {
     }
     
 
+    30
 }).listen(3000);
